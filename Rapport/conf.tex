@@ -1,6 +1,5 @@
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}
-\usepackage[french]{babel}
 \usepackage{csquotes}
 % \usepackage[none]{hyphenat}
 \usepackage[french=nohyphenation]{hyphsubst}
@@ -13,6 +12,8 @@
 \usepackage{spverbatim}
 \usepackage{xcolor}
 \usepackage[backend=bibtex]{biblatex}
+\usepackage[toc]{glossaries}
+\usepackage[french]{babel}
 
 \captionsetup{justification=centering}
 
@@ -60,4 +61,6 @@
 \sloppy
 
 \addbibresource{biblio.bib}
+\makeglossary
+\include{glossary}
 
