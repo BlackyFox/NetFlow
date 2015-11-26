@@ -1,0 +1,13 @@
+/**/*.aux
+/**/*.log
+/**/*.out
+/**/*.xml
+/**/*.toc
+/**/*.bib
+!/**/biblio.bib
+/**/*.backup
+/**/*.bbl
+/**/*.blg
+/**/*.dvi
+/**/*.pdf
+/**/*.synctex.gz
