@@ -1,2 +1,40 @@
-\section{Partie 2}
-\subsection{Sous-titre 2}
+\section{NetFlow}
+\subsection{Indtoduction}
+NetFlow est un protocole développé par la société Cisco dans le but de faire une analyse des trames passant au travers de leurs équipements réseau. Ce projet ayant une très grande popularité lors de sa sortie, le protocole devint alors accessible à tous.\\
+Ainsi, ici, afin d'utiliser le protocole NetFlow, nous pouvons retrouver plusieurs parties :
+\subsubsection{La sonde}
+La mise en place du protocole NetFlow est ici faite grâce un module noyau, \textit{ipt\_NETFLOW}.\\
+TODO\\
+Cette sonde va envoyer toutes ses données à une adresse IP et un port bien spécifique (ici, 127.0.0.1:2055).
+\subsubsection{Le collecteur}
+Afin de récolter toutes les données fournies par la sonde NetFlow, nous devons aussi avoir un collecteur. Son rôle est d'écouter à l'adresse sur laquelle la sonde NetFlow envoie ses données. Il va ainsi réaliser un fichier au format \enquote{\textit{NetFlow}} toutes les 5 minutes.\\
+Ici, le rôle du collecteur est réalisé par le daemon \textit{Nfcapd}.
+\subsubsection{L'interpréteur}
+Cependant, les données fournies par Nfcapd au format \enquote{\textit{NetFlow}} ne sont pas lisible. Afin de palier à cela, il est possible d'utiliser un interpréteur. Dans notre cas, ce rôle est joué par \textit{Nfdump}.\\
+Il est alors possible d'avoir le contenu des captures de la sonde NetFlow à n'importe quel moment.
+\subsubsection{Le grapheur}
+Cependant, au sein de l'interface de gestion d'ALCASAR (ACC\footnote{ALCASAR Control Center}), il est intéressant de pouvoir retrouver de manière graphique les résultats des captures de la sonde NetFlow.\\
+Afin de réaliser cela, nous utilisons le grapheur Nfsen. Ce dernier va récupérer les données fournies par le collecteur afin de réaliser des graphes représentatifs de l'état des connexion (charges, nombre de connexion, serveurs les plus demandés, etc\ldots).
+
+\subsection{Mise à jour}
+Afin de mettre toute la partie NetFlow à jour au sein d'ALCASAR, nous avons tout d'abord chercher quelles étaient les versions installées sur la dernière version du NAC.
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|c|c|}
+	\hline
+	& \textbf{Version au sein d'ALCASAR} & \textbf{Dernière version}\\\toprule
+	\textbf{ipt\_NETFLOW} & 1.7.2 & 2.2-36\\\hline
+ 	\textbf{Nfdump} & 1.6.9 & 1.6.14\\\hline
+ 	\textbf{Nfsen} & 1.3.7 & 1.3.7\\\hline
+ 	\textbf{Nfcapd} & 1.6.9 & 1.6.14\\\hline
+    \end{tabularx}
+    \caption{Comparaison des versions des modules}
+    \label{tab:1}
+\end{table}
+Comme vous pouvons le voir sur le tableau \ref{tab:1}, nous devons mettre à jour la sonde ipt\_NETFLOW, Nfdump ainsi ue Nfcapd.\\
+Actuellement, Nfcapd est inclut au sein de Nfdump. Ainsi, nous devons mettre à jour la sonde et l'interpréteur.\\
+Pour cela, nous avons récupéré les sources des deux paquets sur leurs sources officielles :
+\begin{description}
+ \item[ipt\_NETFLOW] \url{https://github.com/aabc/ipt-netflow}
+ \item[Nfdump] \url{https://github.com/phaag/nfdump}
+\end{description}
