@@ -38,3 +38,31 @@ Pour cela, nous avons récupéré les sources des deux paquets sur leurs sources
  \item[ipt\_NETFLOW] \url{https://github.com/aabc/ipt-netflow}
  \item[Nfdump] \url{https://github.com/phaag/nfdump}
 \end{description}
+
+\subsubsection{ipt\_NETFLOW}
+Afin d'installer la sonde sur notre poste ALCASAR, nous devons ajouté ce module au noyau. Cependant, le noyau d'ALCASAR est déjà configuré pour la mise en place d'un module NetFlow.\\
+ipt\_NETFLOW étant un module supplémentaire d'iptables, il faut s'assurer que ce dernier comporte bien toutes les librairies nécessaires. Pour ce faire, il est recommander de télécharger et installer iptables depuis les sources\footnote{\url{ftp://ftp.netfilter.org/pub/iptables/}}. Il faut cependant faire attention à bien prendre la même version que celle installé de base dans le noyau de la machine. Dans notre cas, pour Mageia 5, la version d'iptables en question est la 1.4.21\footnote{\url{ftp://ftp.netfilter.org/pub/iptables/iptables-1.4.21.tar.bz2}}.\\
+Une fois le paquet téléchargé, nous pouvons décompresser l'archive et l'installer :
+\begin{lstlisting}[style=custombash, language=bash]
+cd iptables-1.4.21
+./configure --prefix=/usr/
+make
+make install 
+\end{lstlisting}
+Dans certains cas, il est possible de vouloir utiliser un système de supervision ou d'hypervision dans le parc informatique où est installé ALCASAR. C'est dans cette optique que les développeurs d'ipt\_NETFLOW ont pensé à intégrer le module net-snmp. \textbf{\textit{DESCRIPTION DU MODULE}}.\\
+L'installation de ce module n'est pas obligatoire pour le bon fonctionnement de NetFlow. Nous avons cependant préféré tester son installation afin de fournir une installation complète de NetFlow.\\
+Il est possible de télécharger la dernière version de ce module sur le site officiel de net-snmp\footnote{\url{www.net-snmp.org}}. Dans notre cas, il s'agit de la version 5.3.7.\\
+Il faut aussi noter que pour que l'installation de ce module fonctionne, il est nécessaire d'avoir des \textit{header} pour perl. Ces fichiers n'étant pas présents lors de nos tests sur Mageia 5, nous avons du installer le paquet \textit{perl-devel}.\\
+Une fois téléchargé, nous pouvons l'installer :
+\begin{lstlisting}[language=bash,style=custombash]
+Erreur latex ici
+\end{lstlisting}
+Une fois ce module installé correctement, il est enfin possible de réaliser l'installation d'ipt\_NETFLOW. La version utilisée est la dernière version disponible du le GitHub du projet (2.2). Git n'étant pas installé de base sur Mageia 5, nous fournissons l'archive comprenant cette version\footnote{ipt-netflow22.tar.gz}.\\
+Une fois décompressée, il est possible de l'installer de la manière suivante :
+\begin{lstlisting}[language=bash,style=custombash]
+ cd ipt-netflow22
+ ./configure
+ make all install
+ depmod
+\end{lstlisting}
+Une fois l'installation réalisée, nous pouvons redémarrer la machine afin que le script de démarrage d'ALCASAR initialise correctement la sonde NetFlow.
