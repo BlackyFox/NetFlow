@@ -61,7 +61,8 @@ cd net-snmp-5.7.3
 make
 make install
 \end{lstlisting}
-Une fois ce module installé correctement, il est enfin possible de réaliser l'installation d'ipt\_NETFLOW. La version utilisée est la dernière version disponible du le GitHub du projet (2.2). Git n'étant pas installé de base sur Mageia 5, nous fournissons l'archive comprenant cette version\footnote{ipt-netflow22.tar.gz}.\\
+Une fois ce module installé correctement, il est enfin possible de réaliser l'installation d'ipt\_NETFLOW. La version utilisée est la dernière version disponible du le GitHub du projet (2.1.36-g95fabbf). Git n'étant pas installé de base sur Mageia 5, nous fournissons l'archive comprenant cette version\footnote{ipt-netflow22.tar.gz}.\\
+Si vous choisissez de cloner le dépôt vous même, prenez soin de regarder que la version est la bonne: lancez le script \textit{version.sh} (dans l'archive fournie la version de la branche master est 2.1.36-g95fabbf et non 2.1 !)\\
 Une fois décompressée, il est possible de l'installer de la manière suivante :
 \begin{lstlisting}[language=bash,style=custombash]
  cd ipt-netflow22
