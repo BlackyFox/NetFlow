@@ -66,3 +66,118 @@ Une fois décompressée, il est possible de l'installer de la manière suivante 
  depmod
 \end{lstlisting}
 Une fois l'installation réalisée, nous pouvons redémarrer la machine afin que le script de démarrage d'ALCASAR initialise correctement la sonde NetFlow.
+
+\subsubsection{Nfdump et Nfcapd}
+Commençons par la partie la plus facile: la mise à jour de nfdump.\\
+Pour cela il faut d'abord installer les dépendances suivantes:
+\begin{itemize}
+\item Flex (ou Lex): dans sa dernière version (pris en charge par le script de mise à jour)
+\item Bison (ou Yacc): dans sa dernière version (pris en charge par le script de mise à jour)
+\item M4: dans sa dernière version (pris en charge pas le script de mise à jour). C'est un language de traitement de macro pour l'installation de nfdump.
+\item 
+\end{itemize}
+Pour chacune des dépendances (si le script n'est pas utilisé) il faut effectuer les commandes d'installation basiques:
+\begin{lstlisting}[language=bash,style=custombash]
+./configure 
+make
+make install
+\end{lstlisting}
+Le ./configure peut être aggémanté de l'option --prefix=/usr/ car de base, les librairies vont être installées dans le dossier lib/ de /usr/local/ au lieu de /usr/lib/ comme cela a été fait pour Alcasar.\\
+Une fois les dépendances installées, il suffit d'aller chercher la dernière version de nfdump et de l'installer. Comme auparavant, une fois l'archive décompressée, il suffit de faire les commandes suivantes
+\begin{lstlisting}[language=bash,style=custombash]
+./configure --prefix=/usr/
+make
+make install
+\end{lstlisting}
+Pour vérifier que la version de nfdump a bien été mise à jour, veuillez vérifier que la commande nfdump -V renvoie bien la version que vous voullez installer.
+
+
+\subsection{Le Script}
+Dans le cas où le script d'installation serait perdu, nous fournissons le script qui a été utilisé ici.\\
+Si l'archive de ipt-tables est aussi perdue, il suffit de faire un
+\begin{lstlisting}[language=bash,style=custombash]
+ git clone git://github.com/aabc/ipt-netflow.git ipt-netflow22
+\end{lstlisting} 
+Cependant si des modifications sont faites dans le code entre le temps où se rapport est rédigé et le temps où vous le lisez, il est fort probables qu'il y ai eu des modifications dans les sources qui peuvent potentiellement ajouter des erreurs dans l'installation de ipt-netflow (si aucune version de release a été ajoutée).
+
+\begin{lstlisting}[language=bash,style=custombash]
+#!/bin/sh
+
+INSTALL_REP=TMP_REP
+
+mkdir $INSTALL_REP
+cd $INSTALL_REP
+wget http://downloads.sourceforge.net/project/nfdump/stable/nfdump-1.6.13/nfdump-1.6.13.tar.gz
+wget http://downloads.sourceforge.net/project/flex/flex-2.6.0.tar.gz
+wget ftp://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz
+wget ftp://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz
+wget http://sourceforge.net/projects/net-snmp/files/net-snmp/5.7.3/net-snmp-5.7.3.tar.gz
+wget ftp://ftp.netfilter.org/pub/iptables/iptables-1.4.21.tar.bz2
+
+cp ipt-netflow22.tar.gz $INSTALL_REP
+
+for f in *.tar.*
+do 
+	tar -xvf $f
+done
+
+echo "Updating collector (nfdump) to version 1.6.13"
+
+#INSTALL M4
+cd m4-1.4.17
+./configure
+make
+make install
+cd ..
+
+#INSTALL FLEX
+cd flex-2.6.0
+./configure
+make
+make install
+cd ..
+
+#INSTALL BISON
+cd bison-3.0.4
+./configure
+make
+make install
+cd ..
+
+#INSTALL NFDUMP
+cd nfdump-1.6.13
+./configure --prefix=/usr/
+make prefix=/usr/
+make install prefix=/usr/
+cd ..
+
+echo "Updating ipt-netflow to version 2.1.36-g95fabbf"
+
+#INSTALL IPTABLES
+cd iptables-1.4.21
+./configure --prefix=/usr/
+make
+make install
+cd ..
+
+#INSTALL SNMP
+urpmi perl-devel
+cd net-snmp-5.7.3
+./configure --prefix=/usr/
+make
+make install
+cd ..
+
+#INSTALL netflow2.2
+cd ipt-netflow22
+./configure
+make all install
+depmod
+cd ..
+
+cd ..
+rm -rf $INSTALL_REP
+
+nfdump -V
+
+\end{lstlisting} 
