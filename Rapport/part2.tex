@@ -1,11 +1,18 @@
 \section{NetFlow}
-\subsection{Indtoduction}
+\subsection{Introduction}
 NetFlow est un protocole développé par la société Cisco dans le but de faire une analyse des trames passant au travers de leurs équipements réseau. Ce projet ayant une très grande popularité lors de sa sortie, le protocole devint alors accessible à tous.\\
 Ainsi, ici, afin d'utiliser le protocole NetFlow, nous pouvons retrouver plusieurs parties :
 \subsubsection{La sonde}
 La mise en place du protocole NetFlow est ici faite grâce un module noyau, \textit{ipt\_NETFLOW}.\\
-TODO\\
-Cette sonde va envoyer toutes ses données à une adresse IP et un port bien spécifique (ici, 127.0.0.1:2055).
+La différence majeure entre Netflow v5 et Netflow v9 repose sur les données exportées et donc à fortiori sur le contenu des flux.\\
+Dans la version 5 de Netflow, les données envoyées au collecteur ne pouvaient pas être choisies, il s’agissait de structures de données fixes. Il fallait donc faire avec ce que les développeurs de Netflow avaient décidé.\\
+On retrouvait par exemple l’adresse IP source - destination, le type de protocole (TCP = 6 ; UDP = 17), port source, port destination, les flags TCP, etc\ldots\\
+Impossible donc pour les administrateurs de récupérer d’autres données que celle \enquote{inscrites} dans Netflow v5.\\
+Dans la version 9 de Netflow, les développeurs ont introduit des templates d’envois de données. Ces templates permettent de choisir, pour l’utilisateur final, ce qu’il désire exporter comme informations vers le collecteur. Ils sont envoyées périodiquement par le routeur ou le switch afin d’informer le collecteur de la façon dont il doit décoder les données reçues et ce que contiennent les flux Netflow réceptionnés.\\
+On retrouve comme nouvelles données disponibles dans les flux Netflow la prise en charge d’IPv6, les TTL, les VLANS (entrée – sortie), la gestion des adresses MAC source et destination, la direction des flux enregistrés (entrée ou sortie par rapport sonde)\ldots\\
+Netflow v9 est donc capable de récolter beaucoup plus d’informations sur les flux que Netflow v5 et il est ainsi possible pour l’utilisateur de décider ce qu’il souhaite exporter ou non comme données dans son ticket Netflow à destination du collecteur.\\
+Enfin un avantage certain de ce nouveau fonctionnement avec template est que l’utilisateur peut donc décider d’alléger les données contenues dans un flux Netflow en les restreignant au strict minimum et donc grâce à cela, de pouvoir envoyer plus de flux dans un même datagramme.\\
+Cette sonde va envoyer toutes ses données à une adresse IP et un port bien spécifique (ici, $127.0.0.1:2055$).
 \subsubsection{Le collecteur}
 Afin de récolter toutes les données fournies par la sonde NetFlow, nous devons aussi avoir un collecteur. Son rôle est d'écouter à l'adresse sur laquelle la sonde NetFlow envoie ses données. Il va ainsi réaliser un fichier au format \enquote{\textit{NetFlow}} toutes les 5 minutes.\\
 Ici, le rôle du collecteur est réalisé par le daemon \textit{Nfcapd}.
@@ -49,7 +56,7 @@ cd iptables-1.4.21
 make
 make install 
 \end{lstlisting}
-Dans certains cas, il est possible de vouloir utiliser un système de supervision ou d'hypervision dans le parc informatique où est installé ALCASAR. C'est dans cette optique que les développeurs d'ipt\_NETFLOW ont pensé à intégrer le module net-snmp. \textbf{\textit{DESCRIPTION DU MODULE}}.\\
+Dans certains cas, il est possible de vouloir utiliser un système de supervision ou d'hypervision dans le parc informatique où est installé ALCASAR. C'est dans cette optique que les développeurs d'ipt\_NETFLOW ont pensé à intégrer le module net-snmp. Ce dernier va permettre de monitorer la \enquote{santé} d'équipements réseau. Pour cela, ce module peut utiliser les protocoles SNMP v1, v2 et v3.\\
 L'installation de ce module n'est pas obligatoire pour le bon fonctionnement de NetFlow. Nous avons cependant préféré tester son installation afin de fournir une installation complète de NetFlow.\\
 Il est possible de télécharger la dernière version de ce module sur le site officiel de net-snmp\footnote{\url{www.net-snmp.org}}. Dans notre cas, il s'agit de la version 5.3.7.\\
 Il faut aussi noter que pour que l'installation de ce module fonctionne, il est nécessaire d'avoir des \textit{header} pour perl. Ces fichiers n'étant pas présents lors de nos tests sur Mageia 5, nous avons du installer le paquet \textit{perl-devel}.
