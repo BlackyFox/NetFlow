@@ -52,10 +52,14 @@ make install
 Dans certains cas, il est possible de vouloir utiliser un système de supervision ou d'hypervision dans le parc informatique où est installé ALCASAR. C'est dans cette optique que les développeurs d'ipt\_NETFLOW ont pensé à intégrer le module net-snmp. \textbf{\textit{DESCRIPTION DU MODULE}}.\\
 L'installation de ce module n'est pas obligatoire pour le bon fonctionnement de NetFlow. Nous avons cependant préféré tester son installation afin de fournir une installation complète de NetFlow.\\
 Il est possible de télécharger la dernière version de ce module sur le site officiel de net-snmp\footnote{\url{www.net-snmp.org}}. Dans notre cas, il s'agit de la version 5.3.7.\\
-Il faut aussi noter que pour que l'installation de ce module fonctionne, il est nécessaire d'avoir des \textit{header} pour perl. Ces fichiers n'étant pas présents lors de nos tests sur Mageia 5, nous avons du installer le paquet \textit{perl-devel}.\\
+Il faut aussi noter que pour que l'installation de ce module fonctionne, il est nécessaire d'avoir des \textit{header} pour perl. Ces fichiers n'étant pas présents lors de nos tests sur Mageia 5, nous avons du installer le paquet \textit{perl-devel}.
+\newpage
 Une fois téléchargé, nous pouvons l'installer :
 \begin{lstlisting}[language=bash,style=custombash]
-Erreur latex ici
+cd net-snmp-5.7.3
+./configure --prefix=/usr/
+make
+make install
 \end{lstlisting}
 Une fois ce module installé correctement, il est enfin possible de réaliser l'installation d'ipt\_NETFLOW. La version utilisée est la dernière version disponible du le GitHub du projet (2.2). Git n'étant pas installé de base sur Mageia 5, nous fournissons l'archive comprenant cette version\footnote{ipt-netflow22.tar.gz}.\\
 Une fois décompressée, il est possible de l'installer de la manière suivante :
@@ -68,8 +72,7 @@ Une fois décompressée, il est possible de l'installer de la manière suivante 
 Une fois l'installation réalisée, nous pouvons redémarrer la machine afin que le script de démarrage d'ALCASAR initialise correctement la sonde NetFlow.
 
 \subsubsection{Nfdump et Nfcapd}
-Commençons par la partie la plus facile: la mise à jour de nfdump.\\
-Pour cela il faut d'abord installer les dépendances suivantes:
+Pour mettre à jour Nfdump et Nfcapd, il faut d'abord installer les dépendances suivantes:
 \begin{itemize}
 \item Flex (ou Lex): dans sa dernière version (pris en charge par le script de mise à jour)
 \item Bison (ou Yacc): dans sa dernière version (pris en charge par le script de mise à jour)
